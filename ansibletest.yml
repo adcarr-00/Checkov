@@ -34,6 +34,7 @@
           - name: AllowSQL
             protocol: Tcp
             destination_port_range: 1433
+            source_address_prefix: *
             access: Allow
             priority: 100
             direction: Inbound
