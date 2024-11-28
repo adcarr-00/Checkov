@@ -28,4 +28,7 @@ jobs:
 
       - name: Run Checkov
         run: checkov -l
+
+      - name: dir
+        run: ls .
         
