@@ -1,0 +1,72 @@
+---
+- name: Create an Azure VM with SQL Server
+  hosts: localhost
+  tasks:
+    - name: Create a resource group
+      azure_rm_resourcegroup:
+        name: myResourceGroup
+        location: eastus
+
+    - name: Create a virtual network
+      azure_rm_virtualnetwork:
+        resource_group: myResourceGroup
+        name: myVNet
+        address_prefixes: 10.0.0.0/16
+
+    - name: Create a subnet
+      azure_rm_subnet:
+        resource_group: myResourceGroup
+        name: mySubnet
+        address_prefix: 10.0.1.0/24
+        virtual_network: myVNet
+
+    - name: Create a public IP address
+      azure_rm_publicipaddress:
+        resource_group: myResourceGroup
+        name: myPublicIP
+        allocation_method: Dynamic
+
+    - name: Create a network security group with public access (vulnerability)
+      azure_rm_securitygroup:
+        resource_group: myResourceGroup
+        name: myNSG
+        rules:
+          - name: AllowSQL
+            protocol: Tcp
+            destination_port_range: 1433
+            access: Allow
+            priority: 100
+            direction: Inbound
+
+    - name: Create a network interface
+      azure_rm_networkinterface:
+        resource_group: myResourceGroup
+        name: myNIC
+        subnet: mySubnet
+        public_ip_name: myPublicIP
+        security_group: myNSG
+
+    - name: Create a virtual machine
+      azure_rm_virtualmachine:
+        resource_group: myResourceGroup
+        name: myVM
+        vm_size: Standard_DS1_v2
+        admin_username: azureuser
+        admin_password: MyP@ssw0rd!
+        network_interfaces: myNIC
+        image:
+          offer: SQL2019-WS2019
+          publisher: MicrosoftSQLServer
+          sku: SQL2019-WS2019
+          version: latest
+
+    - name: Open port 1433 for SQL Server (vulnerability)
+      azure_rm_networksecurityrule:
+        resource_group: myResourceGroup
+        security_group: myNSG
+        name: AllowSQL
+        protocol: Tcp
+        destination_port_range: 1433
+        access: Allow
+        priority: 100
+        direction: Inbound
