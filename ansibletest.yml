@@ -70,3 +70,13 @@
         access: Allow
         priority: 100
         direction: Inbound
+
+- name: Verify tests
+  hosts: all
+  gather_facts: False
+  tasks:
+    - name: disabled
+      yum:
+        name: httpd>=2.4
+        state: present
+        validate_certs: false
