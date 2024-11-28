@@ -19,6 +19,7 @@
         name: mySubnet
         address_prefix: 10.0.1.0/24
         virtual_network: myVNet
+        security_group: myNSG
 
     - name: Create a public IP address
       azure_rm_publicipaddress:
@@ -34,7 +35,7 @@
           - name: AllowSQL
             protocol: Tcp
             destination_port_range: 1433
-            source_address_prefix: *
+            source_address_prefix: "*"
             access: Allow
             priority: 100
             direction: Inbound
@@ -61,16 +62,6 @@
           sku: SQL2019-WS2019
           version: latest
 
-    - name: Open port 1433 for SQL Server (vulnerability)
-      azure_rm_networksecurityrule:
-        resource_group: myResourceGroup
-        security_group: myNSG
-        name: AllowSQL
-        protocol: Tcp
-        destination_port_range: 1433
-        access: Allow
-        priority: 100
-        direction: Inbound
 
 - name: Verify tests
   hosts: all
