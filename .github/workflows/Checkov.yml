@@ -8,6 +8,8 @@ on:
     branches:
       - main
 
+permissions: read-all
+
 jobs:
   checkov:
     runs-on: ubuntu-latest
@@ -25,4 +27,4 @@ jobs:
         run: pip install checkov
 
       - name: Run Checkov
-        run: checkov -d . --framework all -v
+        run: checkov -d . --framework all
