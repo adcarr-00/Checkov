@@ -25,4 +25,4 @@ jobs:
         run: pip install checkov
 
       - name: Run Checkov
-        run: checkov -d . --framework all --quiet
+        run: checkov -d . --framework all --verbose
