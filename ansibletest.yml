@@ -61,7 +61,20 @@
           publisher: MicrosoftSQLServer
           sku: SQL2019-WS2019
           version: latest
+          
+- name: Create an S3 bucket with public access
+  hosts: localhost
+  tasks:
+    - name: Create S3 bucket
+      amazon.aws.s3_bucket:
+        name: my-public-s3-bucket
+        state: present
+        acl: public-read
+      register: s3_bucket
 
+    - name: Output bucket details
+      debug:
+        msg: "Bucket {{ s3_bucket.name }} created with public access"
 
 - name: Verify tests
   hosts: all
