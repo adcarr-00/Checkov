@@ -1,0 +1,21 @@
+ name: Add User and Group
+  hosts: node1
+  become: true
+  vars:
+    username: john
+    groupname: account
+  tasks:
+    - name: Add group
+      group:
+        name: "{{ groupname }}"
+        state: present
+    - name: Add user
+      user:
+        name: "{{ username }}"
+        group: "{{ groupname }}"
+        state: present
+        shell: /bin/bash
+    - name: Set user password
+      user:
+        name: "{{ username }}"
+        password: "{{ 'password' | password_hash('sha512') }}"
