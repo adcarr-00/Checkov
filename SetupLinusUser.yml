@@ -19,3 +19,11 @@
       user:
         name: "{{ username }}"
         password: "{{ 'password' | password_hash('sha512') }}"
+    - name: Disable SELinux
+      command: setenforce 0
+    - name: Update SELinux config to disabled
+      replace:
+        path: /etc/selinux/config
+        regexp: '^SELINUX=enforcing'
+        replace: 'SELINUX=disabled'
+      
