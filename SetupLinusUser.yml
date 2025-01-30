@@ -1,4 +1,4 @@
- name: Add User and Group
+name: Add User and Group
   hosts: node1
   become: true
   vars:
